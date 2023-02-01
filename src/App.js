@@ -97,13 +97,13 @@ const App = () => {
             <DetailProDuctPage onAddToCart={handleAddToCart} />
           </Route>
           <Route exact path="/top">
-            <TopProducts topProducts={topProducts} onAddToCart={handleAddToCart} />
+            <TopProducts topProducts={topProducts} onAddToCart={handleAddToCart} filteredData={filteredData} />
           </Route>
           <Route exact path="/product/:productId">
             <DetailProDuctPage products={products} />
           </Route>
           <Route exact path="/bottom">
-            <BottomProducts onAddToCart={handleAddToCart} />
+            <BottomProducts onAddToCart={handleAddToCart} filteredData={filteredData} />
           </Route>
           <Route exact path="/checkout">
             <Checkout cart={cart} order={order} onCaptureCheckout={handleCaptureCheckout} error={errorMessage} />

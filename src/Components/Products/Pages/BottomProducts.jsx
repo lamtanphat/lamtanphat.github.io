@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import useStyles from '../style';
-import { Grid, Typography, Button } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Product from '../Product/Product';
 import { commerce } from '../../../lib/commerce';
-const BottomProducts = (onAddToCart) => {
+const BottomProducts = (onAddToCart, filteredData) => {
     const [bottomProducts, setBottomProducts] = useState([])
     const classes = useStyles();
     const fetchBottomProducts = async () => {
@@ -19,13 +19,11 @@ const BottomProducts = (onAddToCart) => {
 
         <main className={classes.content}>
             <Grid container justifyContent="center" spacing={4}>
-                {
-                    bottomProducts.map((product) => (
-
-                        <Grid item key={product.id} xs={12} sm={6} md={3} lg={3}>
-                            <Product product={product} onAddToCart={onAddToCart} />
-                        </Grid>
-                    ))
+                {bottomProducts.map((product) => (
+                    <Grid item key={product.id} xs={12} sm={6} md={3} lg={3}>
+                        <Product product={product} onAddToCart={onAddToCart} />
+                    </Grid>
+                ))
                 }
             </Grid>
         </main>

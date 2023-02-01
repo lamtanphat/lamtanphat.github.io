@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, Stepper, Step, StepLabel, Typography, CircularProgress, Divier, Button } from '@material-ui/core';
+import { Paper, Stepper, Step, StepLabel, Typography, CircularProgress, Divider, Button } from '@material-ui/core';
 import useStyles from './style';
+import { Link, useHistory } from 'react-router-dom'
 import AddressForm from '../AddressForm';
 import PaymentForm from '../PaymentForm';
 import { commerce } from '../../../lib/commerce';
@@ -9,7 +10,9 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [shippingData, setShippingData] = useState({});
   const [checkoutToken, setCheckoutToken] = useState(null);
+  const [isFinished, setIsFinished] = useState(false);
   const classes = useStyles();
+  const history = useHistory()
   //component did mount 
   useEffect(() => {
     const generateToken = async () => {
@@ -18,7 +21,7 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
         console.log(token);
         setCheckoutToken(token);
       } catch (error) {
-
+        history.push('/');
       }
     }
     generateToken();
@@ -29,14 +32,48 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
     setShippingData(data);
     nextStep();
   }
-  const Confirmation = () => (
-    <div>
+  const timeout = () => {
+    setTimeout(() => {
+      setIsFinished(true)
+    }, 3000);
+  }
+  let Confirmation = () => order.customer ? (
+    <>
+      <div>
+        <Typography variant="h5"> Thank you for your purchase, {order.customer.firstname} {order.customer.lastname}</Typography>
 
-    </div>
-  );
+        <Divider className={classes.divider} />
+        <Typography variant="subtitle2">Order ref: {order.customer_reference} </Typography>
+        <br />
+        <Button component={Link} to="/" variant="outlined" type="button"> Back to home</Button>
+      </div>
+    </>
+  ) : isFinished ?
+    (
+      <>
+        <div>
+          <Typography variant="h5"> Thank you for your purchase</Typography>
+          <br />
+          <Button component={Link} to="/" variant="outlined" type="button"> Back to home</Button>
+        </div>
+      </>
+    )
+    :
+    (
+      <div className={classes.spinner}>
+        <CircularProgress />
+      </div>
+    );
+  if (error) {
+    <>
+      <Typography variant="h5"> Error: {error}</Typography>
+      <br />
+      <Button component={Link} to="/" variant="outlined" type="button"> Back to home</Button>
+    </>
+  }
   const Form = () => activeStep == 0
     ? <AddressForm checkoutToken={checkoutToken} next={next} />
-    : <PaymentForm nextStep={nextStep} shippingData={shippingData} checkoutToken={checkoutToken} backStep={backStep} onCaptureCheckout={onCaptureCheckout} />
+    : <PaymentForm nextStep={nextStep} timeout={timeout} shippingData={shippingData} checkoutToken={checkoutToken} backStep={backStep} onCaptureCheckout={onCaptureCheckout} />
   return (
     <>
       <div className={classes.toolbar} />

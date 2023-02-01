@@ -1,8 +1,8 @@
 import React from 'react'
 import useStyles from '../style';
-import { Grid, Typography, Button } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Product from '../Product/Product';
-const TopProducts = ({ topProducts, onAddToCart }) => {
+const TopProducts = ({ topProducts, onAddToCart, filteredData }) => {
     const classes = useStyles();
     return (
         <main className={classes.content}>
@@ -10,13 +10,20 @@ const TopProducts = ({ topProducts, onAddToCart }) => {
 
             </div>
             <Grid container justifyContent="center" spacing={4}>
-                {
-                    topProducts.map((product) => (
+                {filteredData != "" ? (
+
+                    filteredData.map((product) => (
 
                         <Grid item key={product.id} xs={12} sm={6} md={3} lg={3}>
                             <Product product={product} onAddToCart={onAddToCart} />
                         </Grid>
                     ))
+                ) : topProducts.map((product) => (
+
+                    <Grid item key={product.id} xs={12} sm={6} md={3} lg={3}>
+                        <Product product={product} onAddToCart={onAddToCart} />
+                    </Grid>
+                ))
                 }
             </Grid>
         </main>
